@@ -56,3 +56,10 @@ afterEvaluate {
         }
     }
 }
+
+tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
+}.configure {
+    doLast {
+        println("Shadow JAR路径: ${archiveFile.get().asFile.absolutePath}")
+    }
+}
