@@ -57,36 +57,48 @@ public class TerraBukkitPlugin extends JavaPlugin {
 
     private GlobalRegionScheduler globalRegionScheduler = this.getServer().getGlobalRegionScheduler();
 
+    /**
+     * 插件启用时的入口点方法。
+     * 当插件被启用时调用，负责初始化各种系统、注册事件和命令。
+     */
     @Override
     public void onEnable() {
+        // 执行版本检查，若检查失败则不继续启用插件
         if(!doVersionCheck()) {
             return;
         }
 
+        // 触发平台初始化事件
         platform.getEventManager().callEvent(new PlatformInitializationEvent());
 
+        // 初始化必要组件，失败则禁用插件
         if(!Initializer.init(platform)) {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
+        // 尝试获取并初始化命令管理器，注册命令
         try {
             PaperCommandManager<CommandSender> commandManager = getCommandSenderPaperCommandManager();
 
+            // 发布命令注册事件
             platform.getEventManager().callEvent(new CommandRegistrationEvent(commandManager));
-
-        } catch(Exception e) { // This should never happen.
+        } catch(Exception e) { // 这种情况理论上不会发生
+            // 记录严重错误日志，并通知用户向Terra报告问题，随后禁用插件
             logger.error("""
-                         TERRA HAS BEEN DISABLED
-                                                  
-                         Errors occurred while registering commands.
-                         Please report this to Terra.
+                         TERRA 已被禁用
+                        
+                         注册命令时发生错误。
+                         请向Terra报告此问题。
                          """.strip(), e);
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
-        Bukkit.getPluginManager().registerEvents(new CommonListener(), this); // Register master event listener
+        // 注册主事件监听器
+        Bukkit.getPluginManager().registerEvents(new CommonListener(), this);
+
+        // 检查是否使用Paper平台并做相应处理
         PaperUtil.checkPaper(this);
     }
 

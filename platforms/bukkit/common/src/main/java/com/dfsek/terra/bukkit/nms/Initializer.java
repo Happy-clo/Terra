@@ -8,7 +8,10 @@ import com.dfsek.terra.bukkit.PlatformImpl;
 
 
 public interface Initializer {
-    String NMS = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+    String[] packageParts = Bukkit.getServer().getClass().getPackage().getName().split("\\.");
+    // 确保数组长度足够访问索引3，如果不足够，应根据实际情况处理，这里示例为取最后一个元素作为默认值
+    String nmsVersionPart = packageParts.length > 3 ? packageParts[3] : packageParts[packageParts.length - 1];
+    String NMS = nmsVersionPart;
     String TERRA_PACKAGE = Initializer.class.getPackageName();
 
     static boolean init(PlatformImpl platform) {
