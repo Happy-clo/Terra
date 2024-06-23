@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ "**" ]
+    branches: ["**"]
   pull_request:
 
 jobs:
@@ -20,8 +20,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
       - name: Configure Git User Details
         run: git config --global user.email "actions@github.com" && git config --global user.name "Github Actions"
       - name: Apply Patches
@@ -29,5 +29,7 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-         name: Terra
-         path: common/addons/palette-block-shortcut/build/libs/*.jar
+          name: Terra
+          path: |
+            common/addons/palette-block-shortcut/build/libs/*.jar
+            platforms/bukkit/build/libs/*.jar
