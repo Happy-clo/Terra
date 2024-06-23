@@ -50,6 +50,13 @@ afterEvaluate {
             finalizedBy(tasks.named("shadowJar"))
         }
 
+        tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
+        }.configure {
+            doLast {
+                println("Shadow JAR路径: ${archiveFile.get().asFile.absolutePath}")
+            }
+        }
+        
         dependencies {
             "compileOnly"(project(":common:api"))
             "testImplementation"(project(":common:api"))
@@ -57,9 +64,3 @@ afterEvaluate {
     }
 }
 
-tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
-}.configure {
-    doLast {
-        println("Shadow JAR路径: ${archiveFile.get().asFile.absolutePath}")
-    }
-}
